@@ -1,0 +1,33 @@
+template header
+NivoRizika
+Pristupacnost
+Rok
+Mehanizacija
+Budzet
+
+package com.ftn.sbnz.rules.template;
+
+import com.ftn.sbnz.model.Dumpsite;
+import com.ftn.sbnz.model.RiskLevel;
+import com.ftn.sbnz.model.LogisticsOrder;
+
+template "LogistikaSanacije"
+
+rule "Planiranje resursa - @{NivoRizika} - @{Pristupacnost}"
+    salience -35
+    when
+        $d : Dumpsite(
+            riskAssessment.riskLevel == RiskLevel.@{NivoRizika},
+            accessPossible == @{Pristupacnost}
+        )
+    then
+        LogisticsOrder order = new LogisticsOrder();
+        order.setDumpsiteId($d.getId());
+        order.setDeadlineDays(@{Rok});
+        order.setMehanization("@{Mehanizacija}");
+        order.setBudgetCategory("@{Budzet}");
+        insert(order);
+        System.out.println("Generisan nalog: @{NivoRizika} / @{Pristupacnost} -> @{Mehanizacija}");
+end
+
+end template

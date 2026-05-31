@@ -1,0 +1,75 @@
+package com.ftn.sbnz.rules.forward;
+
+import com.ftn.sbnz.model.Dumpsite;
+import com.ftn.sbnz.model.Notification;
+import com.ftn.sbnz.model.RiskLevel;
+
+rule "Risk level CRITICAL"
+    salience -20
+    when
+        $d : Dumpsite(riskAssessment.totalRisk > 70, riskAssessment.riskLevel == null)
+    then
+        modify($d) {
+            getRiskAssessment().setRiskLevel(RiskLevel.CRITICAL)
+        }
+        insert(new Notification("INSPECTION", "Inspekcija",
+            $d.getId(), "KRITICNO: Hitna intervencija potrebna!"));
+        logger.info("Nivo rizika: KRITICAN, total = " + $d.getRiskAssessment().getTotalRisk());
+end
+
+rule "Risk level HIGH"
+    salience -20
+    when
+        $d : Dumpsite(riskAssessment.totalRisk > 40,
+                      riskAssessment.totalRisk <= 70,
+                      riskAssessment.riskLevel == null)
+    then
+        modify($d) {
+            getRiskAssessment().setRiskLevel(RiskLevel.HIGH)
+        }
+        insert(new Notification("LOCAL_GOVT", "Lokalna samouprava",
+            $d.getId(), "VISOK RIZIK: Prioritetna sanacija"));
+        logger.info("Nivo rizika: VISOK, total = " + $d.getRiskAssessment().getTotalRisk());
+end
+
+rule "Risk level MODERATE"
+    salience -20
+    when
+        $d : Dumpsite(riskAssessment.totalRisk <= 40, riskAssessment.riskLevel == null)
+    then
+        modify($d) {
+            getRiskAssessment().setRiskLevel(RiskLevel.MODERATE)
+        }
+        insert(new Notification("DATABASE", "Baza podataka",
+            $d.getId(), "UMEREN RIZIK: Redovan monitoring"));
+        logger.info("Nivo rizika: UMEREN, total = " + $d.getRiskAssessment().getTotalRisk());
+end
+
+rule "Priority HIGH with access"
+    salience -30
+    when
+        $d : Dumpsite(riskAssessment.riskLevel == RiskLevel.HIGH, accessPossible == true)
+    then
+        logger.info("Prioritet 10 - pristup moguc, dodati u listu za ciscenje: " + $d.getId());
+end
+
+rule "Priority HIGH no access"
+    salience -30
+    when
+        $d : Dumpsite(riskAssessment.riskLevel == RiskLevel.HIGH, accessPossible == false)
+    then
+        logger.info("Prioritet 5 - nema pristupa, potreban inzenjering tim: " + $d.getId());
+end
+
+rule "Fire risk - CRITICAL and hot"
+    salience -30
+    when
+        $d : Dumpsite(riskAssessment.riskLevel == RiskLevel.CRITICAL, temperature > 30)
+    then
+        modify($d) {
+            setFireRisk(true)
+        }
+        insert(new Notification("FIRE_DEPT", "Vatrogasna sluzba",
+            $d.getId(), "OPASNOST OD POZARA - samozapaljenje moguce!"));
+        logger.info("Fire risk aktiviran za deponiju: " + $d.getId());
+end

@@ -1,0 +1,19 @@
+<kmodule xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://jboss.org/kie/6.0.0/kmodule">
+
+    <!-- Forward chaining - parcijalni rizici, agregacija, klasifikacija -->
+    <kbase name="forwardKbase" packages="com.ftn.sbnz.rules.forward">
+        <ksession name="forwardKsession"/>
+    </kbase>
+
+    <!-- Backward chaining - preduslovi sanacije -->
+    <kbase name="backwardKbase" packages="com.ftn.sbnz.rules.backward">
+        <ksession name="backwardKsession"/>
+    </kbase>
+
+    <!-- CEP - detekcija obrazaca u vremenu -->
+    <kbase name="cepKbase" eventProcessingMode="stream" packages="com.ftn.sbnz.rules.cep">
+        <ksession name="cepKsession" clockType="realtime"/>
+    </kbase>
+
+</kmodule>
