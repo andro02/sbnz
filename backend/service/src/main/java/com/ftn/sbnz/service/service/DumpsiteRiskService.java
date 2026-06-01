@@ -23,13 +23,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import com.ftn.sbnz.model.Dumpsite;
-import com.ftn.sbnz.model.DumpsiteDetectionEvent;
-import com.ftn.sbnz.model.FulfilledPrerequisite;
-import com.ftn.sbnz.model.LogisticsOrder;
-import com.ftn.sbnz.model.MissingPrerequisite;
-import com.ftn.sbnz.model.Notification;
-import com.ftn.sbnz.model.PrerequisiteResult;
+import com.ftn.sbnz.model.drools.Dumpsite;
+import com.ftn.sbnz.model.drools.DumpsiteDetectionEvent;
+import com.ftn.sbnz.model.drools.FulfilledPrerequisite;
+import com.ftn.sbnz.model.drools.LogisticsOrder;
+import com.ftn.sbnz.model.drools.MissingPrerequisite;
+import com.ftn.sbnz.model.drools.Notification;
+import com.ftn.sbnz.model.drools.PrerequisiteResult;
 
 @Service
 public class DumpsiteRiskService {

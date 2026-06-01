@@ -1,4 +1,4 @@
-package com.ftn.sbnz.model;
+package com.ftn.sbnz.model.drools;
 
 import org.kie.api.definition.type.Role;
 import org.kie.api.definition.type.Timestamp;

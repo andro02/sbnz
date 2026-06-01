@@ -1,4 +1,4 @@
-package com.ftn.sbnz.model;
+package com.ftn.sbnz.model.drools;
 
 public class RiskAssessment {
     private double riverRisk;

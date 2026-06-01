@@ -1,8 +1,8 @@
 package com.ftn.sbnz.service.controller;
 
-import com.ftn.sbnz.model.Dumpsite;
-import com.ftn.sbnz.model.DumpsiteDetectionEvent;
-import com.ftn.sbnz.model.PrerequisiteResult;
+import com.ftn.sbnz.model.drools.Dumpsite;
+import com.ftn.sbnz.model.drools.DumpsiteDetectionEvent;
+import com.ftn.sbnz.model.drools.PrerequisiteResult;
 import com.ftn.sbnz.service.service.DumpsiteRiskService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

@@ -1,4 +1,4 @@
-package com.ftn.sbnz.model.feature;
+package com.ftn.sbnz.model.drools.feature;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;

@@ -1,4 +1,4 @@
-package com.ftn.sbnz.model.feature;
+package com.ftn.sbnz.model.drools.feature;
 
 public class Road extends NearbyFeature {
     private String roadType;

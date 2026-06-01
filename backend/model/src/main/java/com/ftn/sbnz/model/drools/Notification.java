@@ -1,4 +1,4 @@
-package com.ftn.sbnz.model;
+package com.ftn.sbnz.model.drools;
 
 import java.util.Date;
 

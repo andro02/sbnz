@@ -1,4 +1,4 @@
-package com.ftn.sbnz.model.feature;
+package com.ftn.sbnz.model.drools.feature;
 
 public class River extends NearbyFeature {
     private int importance; // 1-10

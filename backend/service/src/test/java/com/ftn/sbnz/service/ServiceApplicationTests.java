@@ -13,18 +13,18 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import com.ftn.sbnz.model.Dumpsite;
-import com.ftn.sbnz.model.DumpsiteDetectionEvent;
-import com.ftn.sbnz.model.GeoPoint;
-import com.ftn.sbnz.model.LogisticsOrder;
-import com.ftn.sbnz.model.PrerequisiteResult;
-import com.ftn.sbnz.model.RiskLevel;
-import com.ftn.sbnz.model.feature.City;
-import com.ftn.sbnz.model.feature.IndustrialZone;
-import com.ftn.sbnz.model.feature.Lake;
-import com.ftn.sbnz.model.feature.River;
-import com.ftn.sbnz.model.feature.Road;
-import com.ftn.sbnz.model.feature.School;
+import com.ftn.sbnz.model.drools.Dumpsite;
+import com.ftn.sbnz.model.drools.DumpsiteDetectionEvent;
+import com.ftn.sbnz.model.drools.GeoPoint;
+import com.ftn.sbnz.model.drools.LogisticsOrder;
+import com.ftn.sbnz.model.drools.PrerequisiteResult;
+import com.ftn.sbnz.model.drools.RiskLevel;
+import com.ftn.sbnz.model.drools.feature.City;
+import com.ftn.sbnz.model.drools.feature.IndustrialZone;
+import com.ftn.sbnz.model.drools.feature.Lake;
+import com.ftn.sbnz.model.drools.feature.River;
+import com.ftn.sbnz.model.drools.feature.Road;
+import com.ftn.sbnz.model.drools.feature.School;
 import com.ftn.sbnz.service.service.DumpsiteRiskService;
 
 @SpringBootTest

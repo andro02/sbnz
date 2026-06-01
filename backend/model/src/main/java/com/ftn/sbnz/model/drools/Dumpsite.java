@@ -1,10 +1,10 @@
-package com.ftn.sbnz.model;
+package com.ftn.sbnz.model.drools;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import com.ftn.sbnz.model.feature.NearbyFeature;
+import com.ftn.sbnz.model.drools.feature.NearbyFeature;
 
 public class Dumpsite {
     private String id;
