@@ -36,17 +36,18 @@ public class DumpsiteRiskService {
     
     private static final Logger logger = LoggerFactory.getLogger(DumpsiteRiskService.class);
 
+    private KieContainer kieContainer;
     private KieSession cepSession;
 
     @PostConstruct
-    public void initCepSession() {
+    public void init() {
         KieServices ks = KieServices.Factory.get();
-        KieContainer kc = ks.getKieClasspathContainer();
-        cepSession = kc.newKieSession("cepKsession");
+        kieContainer = ks.getKieClasspathContainer();
+        cepSession = kieContainer.newKieSession("cepKsession");
     }
 
     @PreDestroy
-    public void destroyCepSession() {
+    public void destroy() {
         if (cepSession != null) {
             cepSession.dispose();
         }
@@ -60,9 +61,7 @@ public class DumpsiteRiskService {
     }   
 
     public Dumpsite evaluateRisk(Dumpsite dumpsite) {
-        KieServices ks = KieServices.Factory.get();
-        KieContainer kc = ks.getKieClasspathContainer();
-        KieSession session = kc.newKieSession("forwardKsession");
+        KieSession session = kieContainer.newKieSession("forwardKsession");
 
         session.setGlobal("logger", logger);
         session.insert(dumpsite);
@@ -91,9 +90,7 @@ public class DumpsiteRiskService {
     }
 
     public PrerequisiteResult checkPrerequisites(Dumpsite dumpsite, List<String> fullfilledPrerequisites) {
-        KieServices ks = KieServices.Factory.get();
-        KieContainer kc = ks.getKieClasspathContainer();
-        KieSession session = kc.newKieSession("backwardKsession");
+        KieSession session = kieContainer.newKieSession("backwardKsession");
 
         LogisticsOrder order = dumpsite.getLogisticsOrder();
 

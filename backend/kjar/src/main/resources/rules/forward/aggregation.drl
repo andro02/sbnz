@@ -1,8 +1,8 @@
 package com.ftn.sbnz.rules.forward;
 
-import com.ftn.sbnz.model.Dumpsite;
-import com.ftn.sbnz.model.Notification;
-import com.ftn.sbnz.model.feature.City;
+import com.ftn.sbnz.model.drools.Dumpsite;
+import com.ftn.sbnz.model.drools.Notification;
+import com.ftn.sbnz.model.drools.feature.City;
 
 rule "Urban risk - single city"
     when

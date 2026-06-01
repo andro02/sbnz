@@ -61,12 +61,11 @@ public class LandfillEvaluationService {
 
         double lat = landfill.getCenterLat();
         double lon = landfill.getCenterLon();
-        double radius = 5000; // 5km
 
         List<NearbyFeature> features = new ArrayList<>();
 
         // Reke
-        riverRepository.findNearby(lat, lon, radius).forEach(row -> {
+        riverRepository.findNearby(lat, lon, 5000).forEach(row -> {
             String name = (String) row[1];
             Integer importance = (Integer) row[2];
             Double distance = (Double) row[3];
@@ -74,14 +73,14 @@ public class LandfillEvaluationService {
         });
 
         // Jezera
-        lakeRepository.findNearby(lat, lon, radius).forEach(row -> {
+        lakeRepository.findNearby(lat, lon, 3000).forEach(row -> {
             String name = (String) row[1];
             Double distance = (Double) row[3];
             features.add(new Lake(name, distance));
         });
 
         // Gradovi
-        cityRepository.findNearby(lat, lon, radius).forEach(row -> {
+        cityRepository.findNearby(lat, lon, 3000).forEach(row -> {
             String name = (String) row[1];
             Integer population = (Integer) row[2];
             Double distance = (Double) row[3];
@@ -89,7 +88,7 @@ public class LandfillEvaluationService {
         });
 
         // Putevi
-        roadRepository.findNearby(lat, lon, radius).forEach(row -> {
+        roadRepository.findNearby(lat, lon, 1000).forEach(row -> {
             String name = (String) row[1];
             String roadType = (String) row[2];
             Boolean isMainRoad = (Boolean) row[3];
@@ -98,7 +97,7 @@ public class LandfillEvaluationService {
         });
 
         // Škole
-        schoolRepository.findNearby(lat, lon, radius).forEach(row -> {
+        schoolRepository.findNearby(lat, lon, 2000).forEach(row -> {
             String name = (String) row[1];
             Integer studentCount = (Integer) row[2];
             String type = (String) row[3];
@@ -107,13 +106,18 @@ public class LandfillEvaluationService {
         });
 
         // Industrijske zone
-        industrialZoneRepository.findNearby(lat, lon, radius).forEach(row -> {
+        industrialZoneRepository.findNearby(lat, lon, 2000).forEach(row -> {
             String name = (String) row[1];
             String zoneType = (String) row[2];
             Integer hazardLevel = (Integer) row[3];
             Double distance = (Double) row[4];
             features.add(new IndustrialZone(name, distance, zoneType, hazardLevel));
         });
+
+        boolean hasRoads = features.stream().anyMatch(f -> f instanceof Road);
+        if (!hasRoads) {
+            features.add(new Road("Nepoznat put", 9999, "unknown", false));
+        }
 
         // Konvertuj i evaluiraj
         long now = System.currentTimeMillis();
@@ -129,6 +133,13 @@ public class LandfillEvaluationService {
         dumpsite.setTemperature(randomTemp);
         dumpsite.setNearbyFeatures(features);
 
-        return dumpsiteRiskService.evaluateRisk(dumpsite);
+        Dumpsite result = dumpsiteRiskService.evaluateRisk(dumpsite);
+
+        // Ukloni dummy put iz response-a
+        result.getNearbyFeatures().removeIf(f -> 
+            f instanceof Road && ((Road) f).getDistanceM() == 9999.0
+        );
+
+        return result;
     }
 }

@@ -1,14 +1,14 @@
 package com.ftn.sbnz.rules.forward;
 
-import com.ftn.sbnz.model.Dumpsite;
-import com.ftn.sbnz.model.Notification;
-import com.ftn.sbnz.model.RiskLevel;
-import com.ftn.sbnz.model.feature.River;
-import com.ftn.sbnz.model.feature.Lake;
-import com.ftn.sbnz.model.feature.City;
-import com.ftn.sbnz.model.feature.Road;
-import com.ftn.sbnz.model.feature.School;
-import com.ftn.sbnz.model.feature.IndustrialZone;
+import com.ftn.sbnz.model.drools.Dumpsite;
+import com.ftn.sbnz.model.drools.Notification;
+import com.ftn.sbnz.model.drools.RiskLevel;
+import com.ftn.sbnz.model.drools.feature.River;
+import com.ftn.sbnz.model.drools.feature.Lake;
+import com.ftn.sbnz.model.drools.feature.City;
+import com.ftn.sbnz.model.drools.feature.Road;
+import com.ftn.sbnz.model.drools.feature.School;
+import com.ftn.sbnz.model.drools.feature.IndustrialZone;
 
 global org.slf4j.Logger logger;
 

@@ -7,9 +7,9 @@ Budzet
 
 package com.ftn.sbnz.rules.template;
 
-import com.ftn.sbnz.model.Dumpsite;
-import com.ftn.sbnz.model.RiskLevel;
-import com.ftn.sbnz.model.LogisticsOrder;
+import com.ftn.sbnz.model.drools.Dumpsite;
+import com.ftn.sbnz.model.drools.RiskLevel;
+import com.ftn.sbnz.model.drools.LogisticsOrder;
 
 template "LogistikaSanacije"
 

@@ -1,10 +1,10 @@
 package com.ftn.sbnz.rules.backward;
 
-import com.ftn.sbnz.model.SanitationPrerequisite;
-import com.ftn.sbnz.model.Dumpsite;
-import com.ftn.sbnz.model.LogisticsOrder;
-import com.ftn.sbnz.model.MissingPrerequisite;
-import com.ftn.sbnz.model.FulfilledPrerequisite;
+import com.ftn.sbnz.model.drools.SanitationPrerequisite;
+import com.ftn.sbnz.model.drools.Dumpsite;
+import com.ftn.sbnz.model.drools.LogisticsOrder;
+import com.ftn.sbnz.model.drools.MissingPrerequisite;
+import com.ftn.sbnz.model.drools.FulfilledPrerequisite;
 
 query isPrerequisiteOf(String x, String y)
     SanitationPrerequisite(x, y;)
