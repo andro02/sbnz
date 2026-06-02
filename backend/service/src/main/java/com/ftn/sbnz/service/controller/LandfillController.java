@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ftn.sbnz.model.drools.Dumpsite;
 import com.ftn.sbnz.model.entity.Landfill;
+import com.ftn.sbnz.service.dto.LandfillMarkerDTO;
 import com.ftn.sbnz.service.repository.LandfillRepository;
 import com.ftn.sbnz.service.service.LandfillEvaluationService;
 
@@ -42,5 +43,10 @@ public class LandfillController {
     public ResponseEntity<Dumpsite> evaluate(@PathVariable Integer id) {
         Dumpsite result = landfillEvaluationService.evaluateLandfill(id);
         return ResponseEntity.ok(result);
+    }
+
+    @GetMapping("/markers")
+    public List<LandfillMarkerDTO> getAllMarkers() {
+        return landfillRepository.findAllMarkers();
     }
 }
