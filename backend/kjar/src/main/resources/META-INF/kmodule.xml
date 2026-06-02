@@ -14,6 +14,7 @@
     <!-- CEP - detekcija obrazaca u vremenu -->
     <kbase name="cepKbase" eventProcessingMode="stream" packages="com.ftn.sbnz.rules.cep">
         <ksession name="cepKsession" clockType="realtime"/>
+        <ksession name="cepKsessionPseudo" clockType="pseudo"/>
     </kbase>
 
 </kmodule>

@@ -21,6 +21,8 @@ import org.kie.api.runtime.rule.Variable;
 import org.kie.internal.utils.KieHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import com.ftn.sbnz.model.drools.Dumpsite;
@@ -39,6 +41,9 @@ public class DumpsiteRiskService {
     private KieContainer kieContainer;
     private KieSession cepSession;
 
+    @Autowired
+    private SimpMessagingTemplate messagingTemplate;
+
     @PostConstruct
     public void init() {
         KieServices ks = KieServices.Factory.get();
@@ -56,9 +61,16 @@ public class DumpsiteRiskService {
     public void processDetectionEvent(DumpsiteDetectionEvent event) {
         cepSession.insert(event);
         cepSession.fireAllRules();
+
+        // Pošalji nove notifikacije kroz WebSocket
         cepSession.getObjects(obj -> obj instanceof Notification)
-            .forEach(n -> System.out.println("CEP EVENT: " + n));
-    }   
+            .stream()
+            .map(obj -> (Notification) obj)
+            .forEach(n -> {
+                System.out.println("CEP EVENT: " + n);
+                messagingTemplate.convertAndSend("/topic/cep-notifications", n);
+            });
+    }
 
     public Dumpsite evaluateRisk(Dumpsite dumpsite) {
         KieSession session = kieContainer.newKieSession("forwardKsession");

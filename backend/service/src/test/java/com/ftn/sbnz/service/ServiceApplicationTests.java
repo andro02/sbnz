@@ -8,8 +8,13 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import org.junit.jupiter.api.Test;
+import org.kie.api.KieServices;
+import org.kie.api.runtime.KieContainer;
+import org.kie.api.runtime.KieSession;
+import org.kie.api.time.SessionPseudoClock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -17,6 +22,7 @@ import com.ftn.sbnz.model.drools.Dumpsite;
 import com.ftn.sbnz.model.drools.DumpsiteDetectionEvent;
 import com.ftn.sbnz.model.drools.GeoPoint;
 import com.ftn.sbnz.model.drools.LogisticsOrder;
+import com.ftn.sbnz.model.drools.Notification;
 import com.ftn.sbnz.model.drools.PrerequisiteResult;
 import com.ftn.sbnz.model.drools.RiskLevel;
 import com.ftn.sbnz.model.drools.feature.City;
@@ -222,27 +228,42 @@ class ServiceApplicationTests {
     }
 
     @Test
-    public void testCEP() throws InterruptedException {
-        // Test 1: deponija blizu rijeke
+    public void testCEPCluster() throws InterruptedException {
+        KieServices ks = KieServices.Factory.get();
+        KieContainer kc = ks.getKieClasspathContainer();
+        KieSession session = kc.newKieSession("cepKsessionPseudo");
+        SessionPseudoClock clock = session.getSessionClock();
+
+        // Prva deponija
         DumpsiteDetectionEvent e1 = new DumpsiteDetectionEvent(
             "DEP-C01", "Vojvodina", 45.25, 19.83, true, false);
-        dumpsiteRiskService.processDetectionEvent(e1);
+        session.insert(e1);
+        session.fireAllRules();
 
-        // Test 2: deponija blizu naselja
+        // Pomjeri sat za 1 sat
+        clock.advanceTime(1, TimeUnit.HOURS);
+
+        // Druga deponija
         DumpsiteDetectionEvent e2 = new DumpsiteDetectionEvent(
             "DEP-C02", "Vojvodina", 45.26, 19.84, false, true);
-        dumpsiteRiskService.processDetectionEvent(e2);
+        session.insert(e2);
+        session.fireAllRules();
 
-        // Test 3: klaster - treca deponija u istoj regiji
+        // Pomjeri sat za još 1 sat
+        clock.advanceTime(1, TimeUnit.HOURS);
+
+        // Treća deponija - treba okidati klaster jer su sve unutar 24h
         DumpsiteDetectionEvent e3 = new DumpsiteDetectionEvent(
             "DEP-C03", "Vojvodina", 45.27, 19.85, false, false);
-        dumpsiteRiskService.processDetectionEvent(e3);
+        session.insert(e3);
+        session.fireAllRules();
 
-        // Test 4: deponija u drugoj regiji - ne sme triggerovati klaster
-        DumpsiteDetectionEvent e4 = new DumpsiteDetectionEvent(
-            "DEP-C04", "Sumadija", 44.10, 20.90, true, true);
-        dumpsiteRiskService.processDetectionEvent(e4);
+        long notifications = session.getObjects(obj -> obj instanceof Notification)
+            .stream().count();
 
-        System.out.println("=== CEP TEST ZAVRSEN ===");
+        System.out.println("Notifikacija: " + notifications);
+        assertTrue(notifications > 0);
+
+        session.dispose();
     }
 }
