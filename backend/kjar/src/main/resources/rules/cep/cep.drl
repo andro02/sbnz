@@ -10,18 +10,23 @@ end
 
 rule "CEP - Cluster: vise deponija u istoj regiji za 24h"
     when
-        $e1 : DumpsiteDetectionEvent($region : region, $id1 : dumpsiteId)
-        $e2 : DumpsiteDetectionEvent(region == $region,
-                                      dumpsiteId != $id1,
-                                      this after[0, 24h] $e1)
-        $e3 : DumpsiteDetectionEvent(region == $region,
-                                      dumpsiteId != $id1,
-                                      dumpsiteId != $e2.dumpsiteId,
-                                      this after[0, 24h] $e1)
+        $e1 : DumpsiteDetectionEvent($region : region)
+
+        $count : Number(intValue >= 3) from accumulate(
+            DumpsiteDetectionEvent(region == $region),
+            count(1)
+        )
+
+        not Notification(type == "ENV_AGENCY", message contains $region)
     then
-        insert(new Notification("ENV_AGENCY", "Agencija za zastitu zivotne sredine",
-            $id1, "UPOZORENJE: 3+ deponije detektovane u regiji " + $region + " za 24h!"));
-        System.out.println("CEP: Klaster deponija u regiji " + $region);
+        insert(new Notification(
+            "ENV_AGENCY",
+            "Agencija za zastitu zivotne sredine",
+            $e1.getDumpsiteId(),
+            "UPOZORENJE: 3+ deponije u regiji " + $region
+        ));
+
+        System.out.println("CEP: Cluster ONCE for " + $region);
 end
 
 rule "CEP - Ekoloski rizik: deponija blizu reke"

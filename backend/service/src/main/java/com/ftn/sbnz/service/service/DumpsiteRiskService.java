@@ -18,6 +18,7 @@ import org.kie.api.runtime.KieSession;
 import org.kie.api.runtime.rule.QueryResults;
 import org.kie.api.runtime.rule.QueryResultsRow;
 import org.kie.api.runtime.rule.Variable;
+import org.kie.api.runtime.rule.FactHandle;
 import org.kie.internal.utils.KieHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -59,17 +60,23 @@ public class DumpsiteRiskService {
     }
 
     public void processDetectionEvent(DumpsiteDetectionEvent event) {
-        cepSession.insert(event);
+        FactHandle eventHandle = cepSession.insert(event);
         cepSession.fireAllRules();
 
-        // Pošalji nove notifikacije kroz WebSocket
+        // Pošalji SAMO notifikacije vezane za ovaj konkretan event
+        String dumpsiteId = String.valueOf(event.getDumpsiteId());
+        
         cepSession.getObjects(obj -> obj instanceof Notification)
             .stream()
             .map(obj -> (Notification) obj)
+            .filter(n -> n.getDumpsiteId().equals(dumpsiteId))
             .forEach(n -> {
                 System.out.println("CEP EVENT: " + n);
                 messagingTemplate.convertAndSend("/topic/cep-notifications", n);
             });
+
+        // Briši samo event, notifikacije ostaju kao guard
+        cepSession.delete(eventHandle);
     }
 
     public Dumpsite evaluateRisk(Dumpsite dumpsite) {
