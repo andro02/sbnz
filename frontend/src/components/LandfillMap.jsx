@@ -6,6 +6,9 @@ import { MapContainer, TileLayer, GeoJSON } from "react-leaflet";
 import { FaBars } from "react-icons/fa";
 import { shiftMapCenter } from "../utils/shiftMapCenter";
 
+import { useCepNotifications } from "../utils/useCepNotifications";
+import { CepBell, CepToasts } from "./CepNotifications";
+import "../css/CepNotifications.css";
 import MarkerCluster from "./MarkerCluster";
 import ZoomControls from "./ZoomControls";
 // import UserPin from "./UserPin";
@@ -25,6 +28,7 @@ import "../css/LandfillMap.css";
 
 
 function LandfillMap() {
+  const { notifications, toasts, dismissToast, clearNotifications } = useCepNotifications();
   const [landfills, setLandfills] = useState([]);
   const [registryLandfills, setRegistryLandfills] = useState([]);
   const [border, setBorder] = useState(null);
@@ -90,6 +94,7 @@ function LandfillMap() {
 
   return <>
     <Logo />
+    <CepToasts toasts={toasts} onDismiss={dismissToast} />
 
     <MapContainer className="map" center={[44.8176, 20.4569]} zoom={8} minZoom={7} zoomSnap={0} wheelPxPerZoomLevel={100} ref={mapRef}
       zoomControl={false} renderer={L.canvas()} preferCanvas={true}>
@@ -99,6 +104,7 @@ function LandfillMap() {
 
       <div className="map-controls">
         <ZoomControls />
+        <CepBell notifications={notifications} onClear={clearNotifications} />
         {/* <VerticalToolbar activeMarkerRef={activeMarkerRef} landfillProximityRef={landfillProximityRef} setLayersOpen={setLayersOpen} setPanelOpen={setPanelOpen} setProximityLandfills={setProximityLandfills} onLocation={handleOnLocation} /> */}
       </div>
 

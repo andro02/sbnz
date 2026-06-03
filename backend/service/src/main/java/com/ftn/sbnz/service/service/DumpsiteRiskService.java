@@ -2,10 +2,13 @@ package com.ftn.sbnz.service.service;
 
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
@@ -40,6 +43,7 @@ import com.ftn.sbnz.model.drools.feature.River;
 public class DumpsiteRiskService {
     
     private static final Logger logger = LoggerFactory.getLogger(DumpsiteRiskService.class);
+    private final Set<String> sentNotificationIds = Collections.synchronizedSet(new HashSet<>());
 
     private KieContainer kieContainer;
     private KieSession cepSession;
@@ -65,12 +69,11 @@ public class DumpsiteRiskService {
         cepSession.insert(event);
         cepSession.fireAllRules();
 
-        // Pošalji nove notifikacije kroz WebSocket
         cepSession.getObjects(obj -> obj instanceof Notification)
             .stream()
             .map(obj -> (Notification) obj)
+            .filter(n -> sentNotificationIds.add(n.getDumpsiteId() + "_" + n.getType()))
             .forEach(n -> {
-                // System.out.println("CEP EVENT: " + n);
                 messagingTemplate.convertAndSend("/topic/cep-notifications", n);
             });
     }
