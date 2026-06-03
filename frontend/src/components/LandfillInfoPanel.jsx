@@ -17,7 +17,7 @@ const RISK_META = {
 };
 
 const PREREQ_LABELS = {
-    TraktordostUpan:     "Tractor available",
+    TraktorDostupan:     "Tractor available",
     KamionDostupan:      "Truck available",
     PristupniPut:        "Access road",
     MinimalniBudzet:     "Minimal budget",

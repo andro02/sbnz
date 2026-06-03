@@ -207,7 +207,7 @@ public class DumpsiteRiskService {
         r6.put("NivoRizika", "MODERATE"); r6.put("Pristupacnost", "false");
         r6.put("Rok", "45"); r6.put("Mehanizacija", "Traktor");
         r6.put("Budzet", "Minimalni");
-        r6.put("Preduslovi", List.of("TraktordostUpan", "PristupniPut", "MinimalniBudzet", "DozvolaOpstine"));
+        r6.put("Preduslovi", List.of("TraktorDostupan", "PristupniPut", "MinimalniBudzet", "DozvolaOpstine"));
         rows.add(r6);
 
         InputStream templateStream = getClass().getResourceAsStream(

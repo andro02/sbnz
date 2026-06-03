@@ -93,7 +93,7 @@ function LandfillMap() {
 
     <MapContainer className="map" center={[44.8176, 20.4569]} zoom={8} minZoom={7} zoomSnap={0} wheelPxPerZoomLevel={100} ref={mapRef}
       zoomControl={false} renderer={L.canvas()} preferCanvas={true}>
-      <TileLayer className="map-tiles" url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png" />
+      <TileLayer className="map-tiles" url="https://tile.openstreetmap.org/{z}/{x}/{y}.png" />
 
       {/* <SearchBar panelOpen={panelOpen} mapRefs={{ map: mapRef, activeMarkerRef, landfillProximityRef }} setPanelOpen={setPanelOpen} setProximityLandfills={setProximityLandfills} onLocation={handleOnLocation} /> */}
 
