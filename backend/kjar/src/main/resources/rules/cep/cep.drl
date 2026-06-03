@@ -13,11 +13,9 @@ rule "CEP - Cluster: vise deponija u istoj regiji za 24h"
         $e1 : DumpsiteDetectionEvent($region : region)
 
         $count : Number(intValue >= 3) from accumulate(
-            DumpsiteDetectionEvent(region == $region),
+            DumpsiteDetectionEvent(region == $region) over window:time(24h),
             count(1)
         )
-
-        not Notification(type == "ENV_AGENCY", message contains $region)
     then
         insert(new Notification(
             "ENV_AGENCY",
@@ -26,7 +24,7 @@ rule "CEP - Cluster: vise deponija u istoj regiji za 24h"
             "UPOZORENJE: 3+ deponije u regiji " + $region
         ));
 
-        System.out.println("CEP: Cluster ONCE for " + $region);
+        System.out.println("CEP: Klaster u " + $region);
 end
 
 rule "CEP - Ekoloski rizik: deponija blizu reke"
@@ -37,7 +35,7 @@ rule "CEP - Ekoloski rizik: deponija blizu reke"
         insert(new Notification("CEP_RIVER", "Inspekcija za vode",
             $e.getDumpsiteId(),
             "CEP: Nova deponija detektovana u blizini reke - hitan ekoloski rizik!"));
-        System.out.println("CEP: Deponija blizu reke - " + $e.getDumpsiteId());
+        System.out.println("CEP: Deponija blizu reke - " + $e.getDumpsiteId() + " region: " + $e.getRegion());
 end
 
 rule "CEP - Ekoloski rizik: deponija blizu naselja"
@@ -48,5 +46,5 @@ rule "CEP - Ekoloski rizik: deponija blizu naselja"
         insert(new Notification("CEP_CITY", "Lokalna samouprava",
             $e.getDumpsiteId(),
             "CEP: Nova deponija detektovana u blizini naselja - obavestiti stanovnistvo!"));
-        System.out.println("CEP: Deponija blizu naselja - " + $e.getDumpsiteId());
+        System.out.println("CEP: Deponija blizu naselja - " + $e.getDumpsiteId() + " region: " + $e.getRegion());
 end

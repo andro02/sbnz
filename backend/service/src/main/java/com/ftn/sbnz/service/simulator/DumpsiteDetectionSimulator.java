@@ -24,22 +24,45 @@ public class DumpsiteDetectionSimulator {
 
     @Scheduled(fixedRate = 30000) // svakih 30 sekundi
     public void simulateDetection() {
-        // Uzmi random deponiju iz baze i pošalji kao CEP event
+
         List<Landfill> landfills = landfillRepository.findAll();
         if (landfills.isEmpty()) return;
 
         Landfill random = landfills.get(
-            ThreadLocalRandom.current().nextInt(landfills.size()));
+            ThreadLocalRandom.current().nextInt(landfills.size())
+        );
+
+        List<String> regions = List.of(
+            "Novi Sad",
+            "Beograd",
+            "Nis",
+            "Kragujevac",
+            "Subotica"
+        );
+
+        String region = regions.get(
+            ThreadLocalRandom.current().nextInt(regions.size())
+        );
+
+        boolean nearRiver = ThreadLocalRandom.current().nextDouble() < 0.35; // 35%
+        boolean nearCity  = ThreadLocalRandom.current().nextDouble() < 0.45; // 45%
 
         DumpsiteDetectionEvent event = new DumpsiteDetectionEvent(
             String.valueOf(random.getId()),
-            "Vojvodina",
+            region,
             random.getCenterLat(),
             random.getCenterLon(),
-            true,
-            true
+            nearRiver,
+            nearCity
         );
 
         dumpsiteRiskService.processDetectionEvent(event);
+
+        System.out.println(
+            "SIM EVENT -> id=" + random.getId()
+            + ", region=" + region
+            + ", river=" + nearRiver
+            + ", city=" + nearCity
+        );
     }
 }
