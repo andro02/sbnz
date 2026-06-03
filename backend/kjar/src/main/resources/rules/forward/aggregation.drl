@@ -10,12 +10,13 @@ rule "Urban risk - single city"
         accumulate(
             City($dist : distanceM, $pop : population, distanceM <= 3000) from $d.nearbyFeatures;
             $count : count(1),
-            $totalPop : sum($pop)
+            $totalPop : sum($pop),
+            $minDist : min($dist)
         )
         eval($count == 1)
     then
-        double risk = ($totalPop > 100000 ? 3.0 : $totalPop > 10000 ? 2.0 : 1.0)
-                    * (1.0 / (1 + 1500.0 / 300.0));
+        double risk = ($totalPop.doubleValue() > 100000 ? 3.0 : $totalPop.doubleValue() > 10000 ? 2.0 : 1.0)
+                    * (1.0 / (1 + $minDist.doubleValue() / 300.0));
         modify($d) {
             getRiskAssessment().setUrbanRisk(risk)
         }

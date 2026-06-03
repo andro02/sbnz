@@ -1,3 +1,5 @@
+/* ── existing InfoPanel styles (unchanged) ─────────────────────────────────── */
+
 .info-panel {
     position: fixed;
     background: #e4e3df;
@@ -16,9 +18,12 @@
 }
 
 .info-panel-main {
-    flex: 1;
     word-break: break-word;
-    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    flex: 1;
+    min-width: 0;
 }
 
 @media (min-width: 640px) {
@@ -29,13 +34,8 @@
         height: 100%;
         transform: translateX(100%);
     }
-
     .info-panel.open {
         transform: translateX(0);
-    }
-
-    .info-panel-details {
-        max-height: calc(100vh - 70px);
     }
 }
 
@@ -47,77 +47,46 @@
         height: 60%;
         transform: translateY(100%);
     }
-
     .info-panel.open {
         transform: translateY(0);
     }
-
-    .info-panel-details#landfill {
-        max-height: 20vh;
-    }
-
-    .info-panel-details#serbia {
-        max-height: 50vh;
-    }
-
-    .info-panel-details#info {
-        max-height: 35vh;
-    }
+    .info-panel-details#landfill  { max-height: 20vh; }
+    .info-panel-details#serbia    { max-height: 50vh; }
+    .info-panel-details#info      { max-height: 35vh; }
 }
 
 .info-panel-details {
+    flex: 1;
     overflow-y: auto;
+    min-height: 0;
 }
 
-.panel-btn:not(.close) svg {
-    height: 16px;
-    width: 16px;
-}
+.panel-btn:not(.close) svg { height: 16px; width: 16px; }
 
 .panel-btn.close,
 .panel-btn.bbox,
 .panel-btn.seg,
-.panel-btn.zoom {
-    left: 20px;
-}
+.panel-btn.zoom  { left: 20px; }
 
-.panel-btn.bbox {
-    top: 118px;
-}
-
-.panel-btn.seg {
-    top: 168px;
-}
-
-.panel-btn.zoom {
-    top: 218px;
-}
-
-.panel-btn.zoom.registry {
-    top: 158px;
-}
+.panel-btn.bbox { top: 118px; }
+.panel-btn.seg  { top: 168px; }
+.panel-btn.zoom { top: 218px; }
+.panel-btn.zoom.registry { top: 158px; }
 
 .panel-btn.bbox.on,
 .panel-btn.seg.on,
-.panel-btn.zoom.on {
-    background-color: var(--brand-secondary);
-}
+.panel-btn.zoom.on { background-color: var(--brand-secondary); }
 
 .panel-btn.bbox.on:hover,
 .panel-btn.seg.on:hover,
-.panel-btn.zoom.on:hover {
-    background-color: var(--brand-primary);
-}
+.panel-btn.zoom.on:hover { background-color: var(--brand-primary); }
 
 .panel-content {
     padding: 2.5rem 1rem 1rem;
     overflow-y: auto;
 }
 
-.info-panel-logo {
-    display: block;
-    height: 32px;
-}
+.info-panel-logo { display: block; height: 32px; }
 
 .info-panel-title {
     display: flex;
@@ -137,22 +106,20 @@
     margin: 0;
 }
 
-.info-panel-image {
-    display: block;
-    width: 100%;
-}
+.info-panel-image { display: block; width: 100%; }
 
-.info-panel-details-section {
-    padding: 20px;
-}
+.info-panel-details-section { padding: 20px; }
 
 .info-panel-content {
     border-top: 1px solid var(--brand-secondary);
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-height: 0;
 }
 
-.info-panel-details-section:not(:last-child), .info-panel-image {
-    border-bottom: 1px solid var(--brand-secondary);
-}
+.info-panel-details-section:not(:last-child),
+.info-panel-image { border-bottom: 1px solid var(--brand-secondary); }
 
 .info-panel p {
     display: flex;
@@ -166,30 +133,384 @@
     justify-content: center;
 }
 
-.info-panel span.route:hover {
-    color: var(--brand-secondary);
+.info-panel span.route:hover { color: var(--brand-secondary); cursor: pointer; }
+
+.info-panel-listitem { margin: 16px 0; }
+
+.info-links { display: flex; gap: 10px; justify-content: center; }
+.info-panel a { color: #1c4479; }
+.info-panel a:hover { color: #320d68; }
+.info-links .link-icon { vertical-align: top; margin-top: 3px; }
+
+
+/* ── Evaluation section ────────────────────────────────────────────────────── */
+
+/* Section header row */
+.eval-section-header {
+    margin-bottom: 12px !important;
+}
+
+.eval-section-title {
+    display: flex !important;
+    align-items: center;
+    gap: 6px;
+    font-weight: 600 !important;
+    font-size: 0.8rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    opacity: 0.75;
+    justify-content: flex-start !important;
+}
+
+/* "Evaluate Risk" trigger button */
+.eval-trigger-btn {
+    width: 100%;
+    padding: 9px 0;
+    background: transparent;
+    border: 1.5px solid var(--brand-secondary);
+    color: var(--brand-primary);
+    font-size: 0.82rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
     cursor: pointer;
+    transition: background 0.15s, border-color 0.15s;
+    margin-top: 4px;
 }
 
-.info-panel-listitem {
-    margin: 16px 0;
+.eval-trigger-btn:hover {
+    background: var(--brand-secondary);
 }
 
-.info-links {
+/* Re-run icon button */
+.eval-rerun-btn {
+    background: transparent;
+    border: none;
+    padding: 2px;
+    cursor: pointer;
+    color: var(--brand-primary);
+    opacity: 0.5;
     display: flex;
-    gap: 10px;
-    justify-content: center;
+    align-items: center;
+    transition: opacity 0.15s;
+}
+.eval-rerun-btn:hover { opacity: 1; }
+
+/* Loading */
+.eval-loading {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.82rem;
+    opacity: 0.6;
+    padding: 4px 0;
+    color: var(--brand-primary) !important;
 }
 
-.info-panel a {
-    color: #1c4479;
+@keyframes eval-spin {
+    to { transform: rotate(360deg); }
+}
+.eval-spinner {
+    animation: eval-spin 0.9s linear infinite;
+    flex-shrink: 0;
 }
 
-.info-panel a:hover {
-    color: #320d68;
+/* Error */
+.eval-error {
+    font-size: 0.82rem;
+    color: #9b1010 !important;
+    gap: 8px;
+}
+.eval-error button {
+    background: none;
+    border: none;
+    color: #9b1010;
+    font-weight: 600;
+    cursor: pointer;
+    padding: 0;
+    text-decoration: underline;
+    font-size: 0.82rem;
 }
 
-.info-links .link-icon {
-    vertical-align: top;
-    margin-top: 3px;
+/* Results container */
+.eval-results {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+/* Risk badge */
+.eval-risk-badge {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    border: 1.5px solid var(--risk-color, #c08000);
+    background: color-mix(in srgb, var(--risk-color, #c08000) 10%, transparent);
+    margin-bottom: 4px;
+}
+
+.eval-risk-dot {
+    width: 8px !important;
+    height: 8px !important;
+    min-width: 8px;
+    border-radius: 50%;
+    background: var(--risk-color, #c08000) !important;
+    font-weight: normal !important;
+    display: block !important;
+}
+
+.eval-risk-label {
+    flex: 1;
+    font-weight: 700 !important;
+    font-size: 0.85rem;
+    color: var(--risk-color, #c08000) !important;
+    justify-content: flex-start !important;
+}
+
+.eval-risk-score {
+    font-size: 0.78rem;
+    font-weight: 600 !important;
+    color: var(--risk-color, #c08000) !important;
+    opacity: 0.85;
+    justify-content: flex-end !important;
+}
+
+/* Collapsible card */
+.eval-card {
+    border: 1px solid var(--brand-secondary);
+}
+
+.eval-card-toggle {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 12px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    color: var(--brand-primary);
+    text-align: left;
+    transition: background 0.12s;
+}
+
+.eval-card-toggle:hover {
+    background: rgba(0,0,0,0.04);
+}
+
+.eval-card-toggle-right {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: normal;
+}
+
+.eval-card-body {
+    padding: 8px 12px 10px;
+    border-top: 1px solid var(--brand-secondary);
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+/* Risk bars — reuse .info-panel p layout (flex, space-between) */
+.eval-bar-row {
+    font-size: 0.78rem;
+    gap: 8px;
+}
+
+.eval-bar-label {
+    flex: 0 0 auto;
+    min-width: 110px;
+    font-weight: normal !important;
+    opacity: 0.8;
+    justify-content: flex-start !important;
+}
+
+.eval-bar-wrap {
+    display: flex !important;
+    align-items: center;
+    gap: 6px;
+    flex: 1;
+    justify-content: flex-end !important;
+    font-weight: normal !important;
+}
+
+.eval-bar-track {
+    flex: 1;
+    height: 4px;
+    background: rgba(0,0,0,0.12);
+    display: block !important;
+    font-weight: normal !important;
+}
+
+.eval-bar-fill {
+    display: block !important;
+    height: 100%;
+    background: var(--brand-primary);
+    opacity: 0.55;
+    font-weight: normal !important;
+}
+
+.eval-bar-num {
+    font-size: 0.72rem;
+    min-width: 30px;
+    text-align: right;
+    opacity: 0.7;
+    font-weight: 600 !important;
+    justify-content: flex-end !important;
+}
+
+/* Logistics rows — reuse .info-panel p */
+.eval-logistics-icon-label {
+    display: flex !important;
+    align-items: center;
+    gap: 5px;
+    font-weight: normal !important;
+    opacity: 0.8;
+    font-size: 0.82rem;
+    justify-content: flex-start !important;
+}
+
+/* Prerequisites */
+.eval-prereq-badge {
+    font-size: 0.72rem;
+    font-weight: 600 !important;
+    padding: 2px 7px;
+    border-radius: 0;
+}
+.eval-prereq-badge.ready   { background: rgba(34,120,50,0.12); color: #226032 !important; border: 1px solid #226032; }
+.eval-prereq-badge.not-ready { background: rgba(155,16,16,0.1); color: #9b1010 !important; border: 1px solid #9b1010; }
+
+.eval-prereq-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    padding-top: 2px;
+}
+
+.eval-prereq-chip {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 8px;
+    font-size: 0.75rem;
+    border: 1px solid;
+}
+.eval-prereq-chip span { font-weight: 500 !important; justify-content: flex-start !important; }
+
+.eval-prereq-chip.ok {
+    border-color: #226032;
+    background: rgba(34,120,50,0.08);
+    color: #226032 !important;
+}
+.eval-prereq-chip.ok svg    { color: #226032; }
+
+.eval-prereq-chip.missing {
+    border-color: #9b1010;
+    background: rgba(155,16,16,0.08);
+    color: #9b1010 !important;
+}
+.eval-access-yes { color: #226032 !important; }
+.eval-access-no  { color: #9b1010 !important; }
+
+/* Status flags */
+.eval-flags {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-bottom: 4px;
+}
+
+.eval-flag {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 10px;
+    font-size: 0.78rem;
+    border: 1px solid;
+}
+
+.eval-flag span {
+    font-weight: 500 !important;
+    justify-content: flex-start !important;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.eval-flag.flag-fire {
+    border-color: #9b1010;
+    background: rgba(155,16,16,0.08);
+    color: #9b1010 !important;
+}
+.eval-flag.flag-fire svg { color: #9b1010; }
+
+.eval-flag.flag-water {
+    border-color: #1c4479;
+    background: rgba(28,68,121,0.08);
+    color: #1c4479 !important;
+}
+.eval-flag.flag-water svg { color: #1c4479; }
+
+.eval-flag.flag-population {
+    border-color: var(--brand-secondary);
+    background: rgba(0,0,0,0.04);
+    color: var(--brand-primary) !important;
+}
+.eval-flag.flag-population svg { color: var(--brand-primary); }
+
+.eval-flag.collapsible {
+    flex-direction: column;
+    padding: 0;
+    align-items: stretch;
+}
+
+.eval-flag-toggle {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 10px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+    text-align: left;
+    font-size: 0.78rem;
+    color: inherit;
+}
+
+.eval-flag-toggle span {
+    flex: 1;
+    font-weight: 500 !important;
+    justify-content: flex-start !important;
+}
+
+.eval-flag-details {
+    border-top: 1px solid currentColor;
+    opacity: 0.85;
+    padding: 4px 10px 6px;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.eval-flag-detail-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.75rem;
+}
+
+.eval-flag-detail-row span:first-of-type {
+    flex: 1;
+}
+
+.eval-flag-detail-dist {
+    opacity: 0.7;
+    font-weight: 600 !important;
+    justify-content: flex-end !important;
 }

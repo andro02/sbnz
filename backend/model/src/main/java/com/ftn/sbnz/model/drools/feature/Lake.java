@@ -8,6 +8,6 @@ public class Lake extends NearbyFeature {
 
     @Override
     public double computeRisk() {
-        return 0.8 * (1.0 / (1 + distanceM / 150.0));
+        return 3.0 * (1.0 / (1 + distanceM / 500.0));
     }
 }

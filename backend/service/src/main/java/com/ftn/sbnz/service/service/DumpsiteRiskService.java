@@ -3,6 +3,7 @@ package com.ftn.sbnz.service.service;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -32,6 +33,8 @@ import com.ftn.sbnz.model.drools.LogisticsOrder;
 import com.ftn.sbnz.model.drools.MissingPrerequisite;
 import com.ftn.sbnz.model.drools.Notification;
 import com.ftn.sbnz.model.drools.PrerequisiteResult;
+import com.ftn.sbnz.model.drools.feature.NearbyFeature;
+import com.ftn.sbnz.model.drools.feature.River;
 
 @Service
 public class DumpsiteRiskService {
@@ -76,6 +79,25 @@ public class DumpsiteRiskService {
         KieSession session = kieContainer.newKieSession("forwardKsession");
 
         session.setGlobal("logger", logger);
+
+        Map<String, NearbyFeature> riverMap = new LinkedHashMap<>();
+        List<NearbyFeature> nonRivers = new ArrayList<>();
+
+        for (NearbyFeature f : dumpsite.getNearbyFeatures()) {
+            if (f instanceof River) {
+                River r = (River) f;
+                riverMap.merge(r.getName(), f, (existing, newF) ->
+                    ((River) existing).getDistanceM() <= ((River) newF).getDistanceM() ? existing : newF
+                );
+            } else {
+                nonRivers.add(f);
+            }
+        }
+
+        List<NearbyFeature> deduplicatedFeatures = new ArrayList<>(riverMap.values());
+        deduplicatedFeatures.addAll(nonRivers);
+        dumpsite.setNearbyFeatures(deduplicatedFeatures);
+
         session.insert(dumpsite);
 
         int fired = session.fireAllRules();
