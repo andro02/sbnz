@@ -514,3 +514,24 @@
     font-weight: 600 !important;
     justify-content: flex-end !important;
 }
+
+.eval-flag.flag-road {
+    border-color: #5a4a2a;
+    background: rgba(90,74,42,0.08);
+    color: #5a4a2a !important;
+}
+.eval-flag.flag-road svg { color: #5a4a2a; }
+
+.eval-flag.flag-industry {
+    border-color: #4a2a5a;
+    background: rgba(74,42,90,0.08);
+    color: #4a2a5a !important;
+}
+.eval-flag.flag-industry svg { color: #4a2a5a; }
+
+.eval-flag.flag-school {
+    border-color: #2a5a4a;
+    background: rgba(42,90,74,0.08);
+    color: #2a5a4a !important;
+}
+.eval-flag.flag-school svg { color: #2a5a4a; }

@@ -90,7 +90,7 @@
     color: var(--brand-primary);
     display: flex;
     align-items: center;
-    padding: 0;
+    padding: 6px;
     opacity: 0.6;
 }
 .cep-panel-close:hover { opacity: 1; }

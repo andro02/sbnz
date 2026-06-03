@@ -1,4 +1,4 @@
-import { LuSquareDashed, LuFocus, LuShieldAlert, LuLoader, LuTruck, LuCalendar, LuBanknote, LuCircleCheck, LuCircleX, LuChevronDown, LuChevronUp, LuRefreshCw, LuFlame, LuDroplets, LuUsers, LuWaves } from "react-icons/lu";
+import { LuSquareDashed, LuFocus, LuShieldAlert, LuLoader, LuTruck, LuCalendar, LuBanknote, LuCircleCheck, LuCircleX, LuChevronDown, LuChevronUp, LuRefreshCw, LuFlame, LuDroplets, LuUsers, LuWaves, LuFactory, LuNavigation, LuSchool } from "react-icons/lu";
 import { PiPolygonBold } from "react-icons/pi";
 import { toDMS } from "../utils/toDMS";
 import { useState, useEffect } from "react";
@@ -95,6 +95,17 @@ function CollapsibleCard({ title, badge, defaultOpen = true, children }) {
     );
 }
 
+function deduplicateByName(features) {
+    const map = new Map();
+    for (const f of features) {
+        const existing = map.get(f.name);
+        if (!existing || f.distanceM < existing.distanceM) {
+            map.set(f.name, f);
+        }
+    }
+    return Array.from(map.values());
+}
+
 function CollapsibleFlag({ icon, label, className, children }) {
     const [open, setOpen] = useState(false);
     return (
@@ -110,9 +121,12 @@ function CollapsibleFlag({ icon, label, className, children }) {
 }
 
 function StatusFlags({ result }) {
-    const cities = result?.nearbyFeatures?.filter(f => f.featureType === "city") ?? [];
-    const rivers = result?.nearbyFeatures?.filter(f => f.featureType === "river") ?? [];
-    const lakes  = result?.nearbyFeatures?.filter(f => f.featureType === "lake") ?? [];
+    const cities    = result?.nearbyFeatures?.filter(f => f.featureType === "city") ?? [];
+    const rivers    = result?.nearbyFeatures?.filter(f => f.featureType === "river") ?? [];
+    const lakes     = result?.nearbyFeatures?.filter(f => f.featureType === "lake") ?? [];
+    const schools   = result?.nearbyFeatures?.filter(f => f.featureType === "school") ?? [];
+    const roads      = deduplicateByName(result?.nearbyFeatures?.filter(f => f.featureType === "road") ?? []);
+    const industries = deduplicateByName(result?.nearbyFeatures?.filter(f => f.featureType === "industrialZone") ?? []);
 
     const threatenedNames = new Set(result?.threatenedWaterBodies ?? []);
     const threatenedLakes = lakes.filter(l => threatenedNames.has(l.name));
@@ -156,6 +170,54 @@ function StatusFlags({ result }) {
                         <div key={i} className="eval-flag-detail-row">
                             <span>{c.name}</span>
                             <span className="eval-flag-detail-dist">{c.population.toLocaleString()} res.</span>
+                        </div>
+                    ))}
+                </CollapsibleFlag>
+            )}
+
+            {roads.length > 0 && (
+                <CollapsibleFlag
+                    icon={<LuNavigation size={12} />}
+                    label={`${roads.length} road${roads.length === 1 ? "" : "s"} nearby`}
+                    className="flag-road"
+                >
+                    {roads.map((r, i) => (
+                        <div key={i} className="eval-flag-detail-row">
+                            <LuNavigation size={11} />
+                            <span>{r.name}</span>
+                            <span className="eval-flag-detail-dist">{(r.distanceM / 1000).toFixed(2)} km</span>
+                        </div>
+                    ))}
+                </CollapsibleFlag>
+            )}
+
+            {industries.length > 0 && (
+                <CollapsibleFlag
+                    icon={<LuFactory size={12} />}
+                    label={`${industries.length} industrial zone${industries.length === 1 ? "" : "s"}`}
+                    className="flag-industry"
+                >
+                    {industries.map((iz, i) => (
+                        <div key={i} className="eval-flag-detail-row">
+                            <LuFactory size={11} />
+                            <span>{iz.name}</span>
+                            <span className="eval-flag-detail-dist">{(iz.distanceM / 1000).toFixed(2)} km</span>
+                        </div>
+                    ))}
+                </CollapsibleFlag>
+            )}
+
+            {schools.length > 0 && (
+                <CollapsibleFlag
+                    icon={<LuSchool size={12} />}
+                    label={`${schools.length} school${schools.length === 1 ? "" : "s"} nearby`}
+                    className="flag-school"
+                >
+                    {schools.map((s, i) => (
+                        <div key={i} className="eval-flag-detail-row">
+                            <LuSchool size={11} />
+                            <span>{s.name}</span>
+                            <span className="eval-flag-detail-dist">{(s.distanceM / 1000).toFixed(2)} km</span>
                         </div>
                     ))}
                 </CollapsibleFlag>
