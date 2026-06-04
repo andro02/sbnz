@@ -403,6 +403,26 @@ function EvaluationSection({ landfillId }) {
                         </CollapsibleCard>
                     )}
 
+                    {result?.notifications?.length > 0 && (
+                        <CollapsibleCard
+                            title="Notifications"
+                            badge={
+                                <span className="eval-prereq-badge not-ready">
+                                    {result.notifications.length}
+                                </span>
+                            }
+                            defaultOpen={false}
+                        >
+                            {result.notifications.map((n, i) => (
+                                <div key={i} className="eval-notification-row">
+                                    <span className="eval-notification-type">{n.type}</span>
+                                    <span className="eval-notification-recipient">{n.recipient}</span>
+                                    <span className="eval-notification-msg">{n.message}</span>
+                                </div>
+                            ))}
+                        </CollapsibleCard>
+                    )}
+
                     {/* Prerequisites */}
                     {allNames.length > 0 && (
                         <CollapsibleCard

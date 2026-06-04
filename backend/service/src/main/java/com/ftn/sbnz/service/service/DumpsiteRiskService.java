@@ -106,8 +106,12 @@ public class DumpsiteRiskService {
         int fired = session.fireAllRules();
         System.out.println("Pravila aktivirana: " + fired);
 
-        session.getObjects(obj -> obj instanceof Notification)
-            .forEach(n -> System.out.println("OBAVESTENJE: " + ((Notification) n)));
+        List<Notification> notifications = session.getObjects(obj -> obj instanceof Notification)
+            .stream()
+            .map(obj -> (Notification) obj)
+            .collect(java.util.stream.Collectors.toList());
+        notifications.forEach(n -> System.out.println("OBAVESTENJE: " + n));
+        dumpsite.setNotifications(notifications);
 
         session.dispose();
 

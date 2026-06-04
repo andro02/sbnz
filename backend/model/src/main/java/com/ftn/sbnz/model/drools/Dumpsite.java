@@ -26,6 +26,8 @@ public class Dumpsite {
     private LogisticsOrder logisticsOrder;
     private PrerequisiteResult prerequisiteResult;
 
+    private List<Notification> notifications = new ArrayList<>();
+
     public String getId() {
         return id;
     }
@@ -137,4 +139,12 @@ public class Dumpsite {
     public void setPrerequisiteResult(PrerequisiteResult prerequisiteResult) {
         this.prerequisiteResult = prerequisiteResult;
     }
+
+    public List<Notification> getNotifications() {
+        return notifications;
+    }
+
+    public void setNotifications(List<Notification> notifications) {
+        this.notifications = notifications;
+}
 }

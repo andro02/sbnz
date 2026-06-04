@@ -563,3 +563,38 @@
     opacity: 1;
     background: rgba(0,0,0,0.04);
 }
+
+.eval-notification-row {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    padding: 6px 0;
+    border-bottom: 1px solid var(--brand-secondary);
+}
+
+.eval-notification-row:last-child {
+    border-bottom: none;
+}
+
+.eval-notification-type {
+    font-size: 0.68rem !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.05em;
+    opacity: 0.6;
+    text-transform: uppercase;
+    justify-content: flex-start !important;
+}
+
+.eval-notification-recipient {
+    font-size: 0.75rem !important;
+    font-weight: 600 !important;
+    justify-content: flex-start !important;
+}
+
+.eval-notification-msg {
+    font-size: 0.75rem !important;
+    font-weight: normal !important;
+    line-height: 1.35;
+    justify-content: flex-start !important;
+    opacity: 0.85;
+}
