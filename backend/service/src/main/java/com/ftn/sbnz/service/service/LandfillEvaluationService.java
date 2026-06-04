@@ -56,7 +56,7 @@ public class LandfillEvaluationService {
         this.industrialZoneRepository = industrialZoneRepository;
     }
 
-    public Dumpsite evaluateLandfill(Integer landfillId) {
+    public Dumpsite evaluateLandfill(Integer landfillId, List<String> fulfilledPrerequisites) {
         Landfill landfill = landfillRepository.findById(landfillId).orElseThrow();
 
         double lat = landfill.getCenterLat();
@@ -133,7 +133,7 @@ public class LandfillEvaluationService {
         dumpsite.setTemperature(randomTemp);
         dumpsite.setNearbyFeatures(features);
 
-        Dumpsite result = dumpsiteRiskService.evaluateRisk(dumpsite);
+        Dumpsite result = dumpsiteRiskService.evaluateRisk(dumpsite, fulfilledPrerequisites);
 
         // Ukloni dummy put iz response-a
         result.getNearbyFeatures().removeIf(f -> 

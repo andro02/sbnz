@@ -24,6 +24,20 @@ rule "Insert prerequisite iz naloga"
         System.out.println("[Backward] Insertovan preduslov: " + $prereq);
 end
 
+rule "Vozilo zavisi od pristupnog puta"
+    salience 100
+    when
+        $o : LogisticsOrder()
+        $vozilo : String() from $o.requiredPrerequisites
+        eval($vozilo.equals("TraktorDostupan") || 
+             $vozilo.equals("KombinovanaDostavna") ||
+             $vozilo.equals("SpecijalnaVozilaDostupna"))
+        not SanitationPrerequisite($vozilo, "PristupniPut";)
+    then
+        insert(new SanitationPrerequisite($vozilo, "PristupniPut"));
+        System.out.println("[Backward] " + $vozilo + " zavisi od PristupniPut");
+end
+
 rule "Detektuj nedostajuce preduslove za sanaciju"
     when
         $d : Dumpsite($id : id, riskAssessment.riskLevel != null)

@@ -96,7 +96,7 @@ function LandfillMap() {
     <Logo />
     <CepToasts toasts={toasts} onDismiss={dismissToast} />
 
-    <MapContainer className="map" center={[44.8176, 20.4569]} zoom={8} minZoom={7} zoomSnap={0} wheelPxPerZoomLevel={100} ref={mapRef}
+    <MapContainer className="map" center={[44.2, 19.4]} zoom={8} minZoom={7} zoomSnap={0} wheelPxPerZoomLevel={100} ref={mapRef}
       zoomControl={false} renderer={L.canvas()} preferCanvas={true}>
       <TileLayer className="map-tiles" url="https://tile.openstreetmap.org/{z}/{x}/{y}.png" />
 

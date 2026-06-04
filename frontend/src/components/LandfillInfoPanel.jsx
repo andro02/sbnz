@@ -17,16 +17,32 @@ const RISK_META = {
 };
 
 const PREREQ_LABELS = {
-    TraktorDostupan:     "Tractor available",
-    KamionDostupan:      "Truck available",
-    PristupniPut:        "Access road",
-    MinimalniBudzet:     "Minimal budget",
-    SrednjiBudzet:       "Medium budget",
-    VelikiBudzet:        "Large budget",
-    DozvolaOpstine:      "Municipal permit",
-    SpecijalizovanOtpad: "Hazmat permit",
-    EkoNadzor:           "Eco supervision",
+    ProsireniButzet:          "Extended budget",
+    HitniFondovi:             "Emergency funds",
+    RedovniBudzet:            "Regular budget",
+    MinimalniBudzet:          "Minimal budget",
+    SpecijalnaVozilaDostupna: "Special terrain vehicle available",
+    BagerDostupan:            "Excavator available",
+    KombinovanaDostavna:      "Combined vehicle available",
+    KomunalnoVoziloDostupno:  "Municipal vehicle available",
+    TraktorDostupan:          "Tractor available",
+    PristupniPut:             "Access road",
+    DozvolaOpstine:           "Municipal permit",
 };
+
+const ALL_POSSIBLE_PREREQUISITES = [
+    "TraktorDostupan",
+    "KombinovanaDostavna",
+    "SpecijalnaVozilaDostupna",
+    "BagerDostupan",
+    "KomunalnoVoziloDostupno",
+    "PristupniPut",
+    "MinimalniBudzet",
+    "RedovniBudzet",
+    "HitniFondovi",
+    "ProsireniButzet",
+    "DozvolaOpstine",
+];
 
 const RISK_BARS = [
     { key: "riverRisk",            label: "River proximity",       max: 10 },
@@ -231,16 +247,30 @@ function StatusFlags({ result }) {
 function EvaluationSection({ landfillId }) {
     const [phase, setPhase] = useState("idle");
     const [result, setResult] = useState(null);
+    const [checked, setChecked] = useState(new Set());
 
     useEffect(() => {
         setPhase("idle");
         setResult(null);
+        setChecked(new Set());
     }, [landfillId]);
+
+    function togglePrereq(name) {
+        setChecked(prev => {
+            const next = new Set(prev);
+            next.has(name) ? next.delete(name) : next.add(name);
+            return next;
+        });
+    }
 
     async function evaluate() {
         setPhase("loading");
         try {
-            const res = await fetch(`/api/landfills/${landfillId}/evaluate`, { method: "POST" });
+            const res = await fetch(`/api/landfills/${landfillId}/evaluate`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify([...checked]),
+            });
             if (!res.ok) throw new Error(`HTTP ${res.status}`);
             setResult(await res.json());
             setPhase("done");
@@ -275,6 +305,31 @@ function EvaluationSection({ landfillId }) {
                     </button>
                 )}
             </p>
+
+            {/* Prerequisite checklist — uvijek vidljiv */}
+            {phase !== "loading" && (
+                <div className="eval-prereq-checklist">
+                    <p className="eval-checklist-label">
+                        <span className="eval-section-title" style={{ fontSize: "0.72rem" }}>
+                            Available prerequisites
+                        </span>
+                    </p>
+                    <div className="eval-prereq-chips">
+                        {ALL_POSSIBLE_PREREQUISITES.map(name => (
+                            <button
+                                key={name}
+                                className={`eval-prereq-chip checkable ${checked.has(name) ? "ok" : ""}`}
+                                onClick={() => togglePrereq(name)}
+                            >
+                                {checked.has(name)
+                                    ? <LuCircleCheck size={12} />
+                                    : <LuCircleX size={12} />}
+                                <span>{PREREQ_LABELS[name] ?? name}</span>
+                            </button>
+                        ))}
+                    </div>
+                </div>
+            )}
 
             {/* Idle */}
             {phase === "idle" && (
@@ -361,9 +416,12 @@ function EvaluationSection({ landfillId }) {
                             }
                         >
                             <div className="eval-prereq-chips">
-                                {allNames.map(name => (
-                                    <PrereqChip key={name} name={name} fulfilled={!missing.has(name)} />
+                                {[...missing].map(name => (
+                                    <PrereqChip key={name} name={name} fulfilled={false} />
                                 ))}
+                                {missing.size === 0 && (
+                                    <span style={{ fontSize: "0.78rem", opacity: 0.6 }}>All prerequisites met</span>
+                                )}
                             </div>
                         </CollapsibleCard>
                     )}

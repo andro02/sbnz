@@ -78,7 +78,7 @@ public class DumpsiteRiskService {
             });
     }
 
-    public Dumpsite evaluateRisk(Dumpsite dumpsite) {
+    public Dumpsite evaluateRisk(Dumpsite dumpsite, List<String> fulfilledPrerequisites) {
         KieSession session = kieContainer.newKieSession("forwardKsession");
 
         session.setGlobal("logger", logger);
@@ -119,7 +119,7 @@ public class DumpsiteRiskService {
         }
 
         // Backward - proveri preduslove za sanaciju
-        PrerequisiteResult prerequisites = checkPrerequisites(dumpsite, new ArrayList<>());
+        PrerequisiteResult prerequisites = checkPrerequisites(dumpsite, fulfilledPrerequisites);
         dumpsite.setPrerequisiteResult(prerequisites);
         System.out.println("PREDUSLOVI ZA SANACIJU: " + prerequisites);
 

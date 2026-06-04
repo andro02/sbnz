@@ -25,7 +25,7 @@ public class DumpsiteController {
 
     @PostMapping("/evaluate")
     public ResponseEntity<Dumpsite> evaluate(@RequestBody Dumpsite dumpsite) {
-        Dumpsite result = dumpsiteRiskService.evaluateRisk(dumpsite);
+        Dumpsite result = dumpsiteRiskService.evaluateRisk(dumpsite, new ArrayList<>());
         dumpsiteStorage.add(result);
         return ResponseEntity.ok(result);
     }

@@ -58,7 +58,7 @@ class ServiceApplicationTests {
             new IndustrialZone("Industrijska zona Sever", 800, "heavy", 8)
         ));
 
-        Dumpsite result = dumpsiteRiskService.evaluateRisk(dumpsite);
+        Dumpsite result = dumpsiteRiskService.evaluateRisk(dumpsite, new ArrayList<>());
 
         System.out.println("=== REZULTAT ===");
         System.out.println("Total risk: " + result.getRiskAssessment().getTotalRisk());
@@ -96,7 +96,7 @@ class ServiceApplicationTests {
             new Road("Lokalni put", 800, "local", false)
         ));
 
-        Dumpsite result = dumpsiteRiskService.evaluateRisk(dumpsite);
+        Dumpsite result = dumpsiteRiskService.evaluateRisk(dumpsite, new ArrayList<>());
 
         System.out.println("=== REZULTAT (umeren) ===");
         System.out.println("Total risk: " + result.getRiskAssessment().getTotalRisk());

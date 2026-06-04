@@ -535,3 +535,31 @@
     color: #2a5a4a !important;
 }
 .eval-flag.flag-school svg { color: #2a5a4a; }
+
+.eval-prereq-checklist {
+    margin-bottom: 10px;
+}
+
+.eval-checklist-label {
+    margin-bottom: 6px !important;
+}
+
+.eval-prereq-chip.checkable {
+    background: transparent;
+    border: 1px solid;
+    cursor: pointer;
+    transition: background 0.12s;
+}
+
+.eval-prereq-chip.checkable:not(.ok) {
+    border-color: var(--brand-secondary);
+    color: var(--brand-primary) !important;
+    opacity: 0.6;
+}
+
+.eval-prereq-chip.checkable:not(.ok) svg { color: var(--brand-primary); }
+
+.eval-prereq-chip.checkable:hover {
+    opacity: 1;
+    background: rgba(0,0,0,0.04);
+}
